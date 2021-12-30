@@ -1,0 +1,80 @@
+package com.simpleapp.demo.service;
+
+import java.util.List;
+import java.util.Optional;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.simpleapp.demo.entity.Employee;
+import com.simpleapp.demo.repository.EmployeeRepository;
+
+@Service
+
+public class EmployeeService {
+	
+	@Autowired
+	EmployeeRepository employeeRepository;
+	
+	public String addEmployee(Employee employee) {
+		employeeRepository.save(employee);
+		return "Employee Added Successfully";
+		
+	}
+	public List<Employee> getAllEmployees(int pageNo, int pageSize,String sortOrder) {
+		Pageable pageable = PageRequest.of(pageNo, pageSize, sortOrder.equals("asc") ? Sort.by("name").ascending() : Sort.by("name").descending());
+		Page<Employee> empList = employeeRepository.findAll(pageable);
+		return empList.toList();
+	}
+	
+	public Employee getSingleEmployee(int empId) {
+		Optional<Employee> emp = employeeRepository.findById(empId);
+		return emp.isPresent() ? emp.get() : null;
+	}
+	
+	
+	public String updateEmployee(Employee emp, int empId) {
+		Optional<Employee> emp1 = employeeRepository.findById(empId); 
+		if(emp1.isPresent()) {
+			emp1.get().setName(emp.getName());
+			emp1.get().setEmail(emp.getEmail());
+			employeeRepository.save(emp1.get());
+			return "Employee Updated Successfully";
+			
+		} else {
+			return "Employee Not Found";
+		}
+	}
+	
+	public String deleteEmployee(int empId) {
+		Optional<Employee> emp1 = employeeRepository.findById(empId); 
+		if(emp1.isPresent()) {
+			employeeRepository.deleteById(empId);
+			return "Employee Deleted Successfully";
+			
+		} else {
+			return "Employee Not Found";
+		}
+	}
+	public Employee getEmployeeByName(String name) {
+		return null;
+	}
+	public int getEmployeeCount() {
+		int count = employeeRepository.getEmpcount();
+		return 0;
+	}
+	public long getEmployeeCountByJpa() {
+		return employeeRepository.count();
+	}
+	
+	
+	
+
+}
