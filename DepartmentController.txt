@@ -1,0 +1,65 @@
+package com.simpleapp.demo.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.simpleapp.demo.entity.Department;
+import com.simpleapp.demo.entity.Employee;
+import com.simpleapp.demo.service.DepartmentService;
+
+@RestController
+@RequestMapping("/api")
+public class DepartmentController {
+	
+	@Autowired
+	DepartmentService departmentService;
+	
+	//localhost :8080/api/department
+		@PostMapping("/department")
+		public String addDepartment(@RequestBody Department department) {
+			String message = departmentService.addDepartment(department);
+			return message;
+		}
+		
+		//localhost :8080/api/department
+		@GetMapping("/department")
+		public List<Department> getAllDepartment() {
+			List<Department> lstDepartment = departmentService.getAllDepartment();
+			return lstDepartment;
+		}
+		
+		//localhost:8080/api/department/1
+		@GetMapping("/department/{id}")
+		public Department getSingleDepartment(@PathVariable("id") int deptId) {
+			Department dept = departmentService.getSingleDepartment(deptId);
+			return dept;
+		}
+		
+		
+/*		//localhost:8080/api/department/1
+		@PutMapping("department/{id}")
+		public String updateDepartment(@RequestBody Department dept, @PathVariable("id") int deptId) {
+			String message = departmentService.updateDepartment(dept,deptId);
+			return message;
+		}*/
+		
+		//localhost:8080/api/department/1
+		@DeleteMapping("/department/{id}")
+		public String deleteDepartment(@PathVariable("id") int deptId) {
+			String message = departmentService.deleteDepartment(deptId);
+			return message;
+			
+		}
+		
+		
+
+}
